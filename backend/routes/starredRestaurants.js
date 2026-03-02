@@ -1,5 +1,6 @@
 const express = require("express");
 const { v4: uuidv4 } = require("uuid");
+const { restaurants } = require("./restaurants");
 const router = express.Router();
 const ALL_RESTAURANTS = require("./restaurants").restaurants;
 
@@ -67,13 +68,34 @@ router.get("/:id", (req, res) => {
 /**
  * Feature 8: Adding to your list of starred restaurants.
  */
+router.post("/", (req, res) => {
+  const { body } = req;
+  const { name } = body;
 
+  // Find the restaurant's details in ALL_RESTAURANTS
+  const restaurant = ALL_RESTAURANTS.find((restaurant) => restaurant.id === body.id);
+
+  // Generate a unique ID for the new starred restaurant.
+  const newId = uuidv4();
+
+  // Create a new starred restaurant
+  const newStarredRestaurant = {
+    id: newId,
+    restaurantId: restaurant.id,
+    name: restaurant.name
+  };
+
+  // Add the new restaurant to the list of starred restaurants.
+  STARRED_RESTAURANTS.push(newStarredRestaurant);
+
+  res.json(newStarredRestaurant);
+});
 
 
 /**
  * Feature 9: Deleting from your list of starred restaurants.
  */
-
+router.delete("/:id")
 
 /**
  * Feature 10: Updating your comment of a starred restaurant.
